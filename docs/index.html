@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sollertia | Fine Motor Control in Extended Reality</title>
-    <meta name="description" content="Sollertia: A research system for quantifying fine motor control in extended reality through task-based interaction and wearable force sensing.">
+    <title>Sollertia | Measuring Fine Motor Control in XR</title>
+    <meta name="description" content="Sollertia: A system for measuring fine motor control in XR using task-based interaction and wearable force input.">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -393,21 +393,15 @@
     <header>
         <div class="container">
             <h1>Sollertia</h1>
-            <p class="subtitle">Quantifying Fine Motor Control in Extended Reality</p>
+            <p class="subtitle">Measuring Fine Motor Control in XR</p>
             <p class="authors">
-                <a href="https://github.com/anaya33">Anaya Yorke</a>,
-                David Salas C.,
-                <a href="https://github.com/gstand">Garret S. Stand</a>,
-                Mathias Sosa
+                <a href="https://github.com/anaya33">Anaya Yorke</a> &
+                <a href="https://github.com/gstand">Garret S. Stand</a>
             </p>
             <div class="badges">
                 <a href="https://github.com/anaya33/Sollertia" class="badge">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                     GitHub
-                </a>
-                <a href="https://arxiv.org/abs/2405.13023" class="badge">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-                    Related Paper
                 </a>
                 <span class="badge">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
@@ -432,13 +426,13 @@
             <h2>Abstract</h2>
             <div class="abstract">
                 <p>
-                    Fine motor control assessment is critical for rehabilitation following neurological events, yet traditional methods lack the temporal resolution and quantitative precision needed to characterize movement dynamics. We present Sollertia, a research system that measures fine motor control in extended reality (XR) environments using task-based interaction and wearable force sensing. The system replicates a standardized button-pressing task in both physical and XR conditions, combining behavioral metrics (reaction time, spatial accuracy, movement trajectory) with continuous force data from finger-mounted sensors. By enabling direct comparison of motor performance across physical and virtual environments, Sollertia addresses a key gap in XR-based rehabilitation research: validating that virtual interactions accurately reflect real-world motor capabilities.
+                    Sollertia is a system for measuring fine motor control in XR using task-based interaction and wearable force input. The system replicates the same button-pressing task in both physical and XR conditions, enabling direct comparison of motor performance across environments. By combining behavioral metrics (reaction time, spatial accuracy, movement trajectory) with continuous force data from finger-mounted sensors, Sollertia captures how people move, react, and apply pressure during interaction. The goal is to evaluate whether XR interaction can capture meaningful fine motor behavior comparable to physical tasks.
                 </p>
             </div>
             
             <h3>Research Questions</h3>
             <ol>
-                <li>Can XR-based motor tasks capture clinically meaningful fine motor behavior?</li>
+                <li>Can XR-based motor tasks capture meaningful fine motor behavior?</li>
                 <li>How does motor performance in XR compare to equivalent physical tasks?</li>
                 <li>What role does force modulation play in characterizing motor control quality?</li>
             </ol>
@@ -447,10 +441,10 @@
         <section id="background">
             <h2>Background</h2>
             <p>
-                Fine motor control assessment is critical for rehabilitation following neurological events such as stroke, where disrupted neural pathways commonly affect hand dexterity and coordination. Traditional assessment methods (e.g., Nine Hole Peg Test, Box and Block Test) provide limited quantitative insight and lack the temporal resolution needed to characterize movement dynamics.
+                Traditional motor assessments provide limited quantitative insight, often yielding only summary scores that obscure the temporal dynamics of movement. XR environments offer the potential for precise, objective measurement of motor behavior, but validation against physical task performance is needed.
             </p>
             <p>
-                Virtual reality-based rehabilitation has shown promise for improving motor recovery through engaging, repetitive practice that supports neuroplasticity. However, validating that XR interactions accurately reflect real-world motor capabilities remains an open research challenge.
+                A fundamental question remains: do motor behaviors observed in XR accurately reflect real-world motor capabilities? Sollertia addresses this by replicating the same task in both physical and XR conditions.
             </p>
             
             <h3>Theoretical Foundation</h3>
@@ -512,7 +506,7 @@
                     <p>Finger-mounted FSR sensors (index and middle fingers) capture continuous pressure data at 10 Hz via Arduino.</p>
                 </div>
                 <div class="card">
-                    <h4>Clinical Dashboard</h4>
+                    <h4>Dashboard</h4>
                     <p>Rust-based application for real-time visualization, session management, and data export.</p>
                 </div>
             </div>
@@ -748,21 +742,8 @@
             
             <div class="reference">
                 <span class="reference-number">[6]</span>
-                <span class="reference-title">A Machine Learning Approach for Predicting Upper Limb Motion Intentions with Multimodal Data in Virtual Reality</span><br>
-                <span class="reference-authors">Yorke, A., et al. (2024)</span><br>
-                <a href="https://arxiv.org/abs/2405.13023">arXiv:2405.13023</a>
-            </div>
-            
-            <div class="reference">
-                <span class="reference-number">[7]</span>
                 <span class="reference-title">The information capacity of the human motor system in controlling the amplitude of movement</span><br>
                 <span class="reference-authors">Fitts, P. M. (1954). Journal of Experimental Psychology, 47(6), 381-391.</span>
-            </div>
-            
-            <div class="reference">
-                <span class="reference-number">[8]</span>
-                <span class="reference-title">Virtual reality for stroke rehabilitation</span><br>
-                <span class="reference-authors">Laver, K. E., et al. (2017). Cochrane Database of Systematic Reviews.</span>
             </div>
         </section>
     </main>

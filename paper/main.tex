@@ -54,14 +54,12 @@
 
 \title{
     \vspace{-1cm}
-    \textbf{Sollertia: Quantifying Fine Motor Control in Extended Reality Through Task-Based Interaction and Wearable Force Sensing}
+    \textbf{Sollertia: Measuring Fine Motor Control in Extended Reality Through Task-Based Interaction and Wearable Force Sensing}
 }
 
 \author{
     Anaya Yorke\textsuperscript{1} \quad
-    David Salas C.\textsuperscript{1} \quad
-    Garret S. Stand\textsuperscript{1} \quad
-    Mathias Sosa\textsuperscript{1} \\[0.5em]
+    Garret S. Stand\textsuperscript{1} \\[0.5em]
     \textsuperscript{1}Independent Research \\[0.3em]
     \small\texttt{github.com/anaya33/Sollertia}
 }
@@ -73,14 +71,14 @@
 \maketitle
 
 \begin{abstract}
-Fine motor control assessment is critical for rehabilitation following neurological events, yet traditional methods lack the temporal resolution and quantitative precision needed to characterize movement dynamics. We present Sollertia, a research system that measures fine motor control in extended reality (XR) environments using task-based interaction and wearable force sensing. The system replicates a standardized button-pressing task in both physical and XR conditions, combining behavioral metrics (reaction time, spatial accuracy, movement trajectory) with continuous force data from finger-mounted sensors. This paper describes the system architecture, measurement methodology, and preliminary validation approach. By enabling direct comparison of motor performance across physical and virtual environments, Sollertia addresses a key gap in XR-based rehabilitation research: validating that virtual interactions accurately reflect real-world motor capabilities.
+We present Sollertia, a system for measuring fine motor control in extended reality (XR) using task-based interaction and wearable force input. The system replicates the same button-pressing task in both physical and XR conditions, enabling direct comparison of motor performance across environments. By combining behavioral metrics (reaction time, spatial accuracy, movement trajectory) with continuous force data from finger-mounted sensors, Sollertia captures how people move, react, and apply pressure during interaction. This paper describes the system architecture, measurement methodology, and current study design. The goal is to evaluate whether XR interaction can capture meaningful fine motor behavior comparable to physical tasks.
 \end{abstract}
 
 \section{Introduction}
 
-Stroke and other neurological conditions frequently impair fine motor control, affecting patients' ability to perform daily activities requiring hand dexterity and coordination \citep{laver2017virtual}. Rehabilitation depends on repetitive, engaging practice to support neuroplasticity, yet traditional assessment methods—such as the Nine Hole Peg Test and Box and Block Test—provide limited quantitative insight into movement quality \citep{schoen2025pegs}.
+Extended reality (XR) technologies are increasingly used for tasks requiring precise motor control, yet a fundamental question remains: \textit{Do motor behaviors observed in XR accurately reflect real-world motor capabilities?}
 
-Virtual reality (VR) and extended reality (XR) technologies offer promising platforms for rehabilitation, providing immersive, motivating environments that can be precisely controlled and measured \citep{chen2024metrics}. However, a fundamental question remains: \textit{Do motor behaviors observed in XR accurately reflect real-world motor capabilities?}
+Traditional motor assessments provide limited quantitative insight, often yielding only summary scores that obscure the temporal dynamics of movement \citep{schoen2025pegs}. XR environments offer the potential for precise, objective measurement of motor behavior \citep{chen2024metrics}, but validation against physical task performance is needed.
 
 This paper introduces Sollertia, a system designed to address this question through:
 
@@ -106,18 +104,18 @@ Fitts' Law \citep{fitts1954information} provides a foundational model for unders
 
 where $MT$ is movement time, $ID = \log_2(2D/W)$ is the index of difficulty, $D$ is movement distance, and $W$ is target width. This relationship has been validated extensively in 2D interfaces and, more recently, in 3D virtual environments \citep{lu2019modeling}.
 
-\subsection{XR for Rehabilitation}
+\subsection{XR for Motor Assessment}
 
-Virtual reality-based rehabilitation has demonstrated efficacy for upper limb motor recovery \citep{laver2017virtual}. Key advantages include:
+XR environments offer several advantages for motor assessment:
 
 \begin{itemize}
     \item Precise control over task parameters
     \item Automatic, objective data collection
-    \item Engaging, gamified experiences
-    \item Safe practice environments
+    \item Repeatable, standardized conditions
+    \item Rich spatial and temporal data capture
 \end{itemize}
 
-However, validation that XR-based assessments correlate with real-world motor function remains limited \citep{schneider2021accuracy}.
+However, validation that XR-based assessments correlate with physical task performance remains limited \citep{schneider2021accuracy}.
 
 \section{System Design}
 
@@ -159,7 +157,7 @@ Resolution & 10-bit ADC (0--1023) \\
 
 The index and middle fingers were selected as primary measurement points due to their functional importance in precision grip and established clinical significance in motor assessment.
 
-\subsection{Clinical Dashboard}
+\subsection{Dashboard}
 
 A Rust-based application aggregates data streams, providing:
 
@@ -167,7 +165,6 @@ A Rust-based application aggregates data streams, providing:
     \item Real-time visualization of force and events
     \item Session configuration and control
     \item Data export for offline analysis
-    \item Longitudinal progress tracking
 \end{itemize}
 
 \section{Measurement Framework}
@@ -307,9 +304,9 @@ Statistical comparison of physical vs. XR performance using paired analyses.
 \subsection{Research Questions}
 
 \begin{enumerate}
-    \item Can XR-based motor tasks capture clinically meaningful fine motor behavior?
+    \item Can XR-based motor tasks capture meaningful fine motor behavior?
     \item How does motor performance in XR compare to equivalent physical tasks?
-    \item What role does force modulation play in characterizing motor control quality?
+    \item What role does force modulation play in characterizing motor control?
 \end{enumerate}
 
 \subsection{Planned Studies}
@@ -322,9 +319,9 @@ Assess consistency of metrics across repeated sessions within participants.
 
 Compare performance on matched tasks in physical and XR conditions.
 
-\textbf{Study 3: Clinical Correlation}
+\textbf{Study 3: Cross-Environment Correlation}
 
-Correlate Sollertia metrics with established clinical assessments (e.g., Nine Hole Peg Test).
+Correlate metrics between physical and XR conditions to assess measurement validity.
 
 \section{Discussion}
 
@@ -358,7 +355,7 @@ Current limitations include:
 
 \section{Conclusion}
 
-Sollertia represents a step toward rigorous, quantitative assessment of fine motor control in XR environments. By combining behavioral and force metrics in a standardized task framework, the system enables direct comparison of motor performance across physical and virtual conditions—a critical capability for validating XR-based rehabilitation tools.
+Sollertia represents a step toward rigorous, quantitative measurement of fine motor control in XR environments. By combining behavioral and force metrics in a standardized task framework, the system enables direct comparison of motor performance across physical and virtual conditions.
 
 The open-source implementation is available at \url{https://github.com/anaya33/Sollertia}.
 

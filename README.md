@@ -2,16 +2,14 @@
 
 <img src="game/Assets/sollertia_purple.svg" alt="Sollertia Logo" width="360">
 
-# Sollertia
-
-**Quantifying Fine Motor Control in Extended Reality**
+**Measuring Fine Motor Control in XR**
 
 [![Unity](https://img.shields.io/badge/Unity-6-000000?style=for-the-badge&logo=unity&logoColor=white)](https://unity.com)
 [![Rust](https://img.shields.io/badge/Rust-Dashboard-DEA584?style=for-the-badge&logo=rust&logoColor=white)](https://rust-lang.org)
 [![Arduino](https://img.shields.io/badge/Arduino-Hardware-00979D?style=for-the-badge&logo=arduino&logoColor=white)](https://arduino.cc)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue?style=for-the-badge)](LICENSE)
 
-[Overview](#overview) | [System](#system-architecture) | [Metrics](#metrics) | [Methods](#methods) | [Installation](#installation) | [Whitepaper](#whitepaper) | [Team](#team)
+[Overview](#overview) | [Metrics](#metrics) | [System](#system) | [Sensing](#sensing) | [Installation](#installation) | [History](#history) | [Team](#team)
 
 </div>
 
@@ -20,26 +18,14 @@
 ## Table of Contents
 
 - [Overview](#overview)
-- [Research Context](#research-context)
-- [System Architecture](#system-architecture)
-  - [XR Application](#xr-application)
-  - [Wearable Hardware](#wearable-hardware)
-  - [Clinical Dashboard](#clinical-dashboard)
 - [Metrics](#metrics)
-  - [Behavioral Metrics](#behavioral-metrics)
-  - [Force Metrics](#force-metrics)
-- [Methods](#methods)
-  - [Task Design](#task-design)
-  - [Data Collection](#data-collection)
-  - [Analysis Pipeline](#analysis-pipeline)
+- [System](#system)
+- [Sensing](#sensing)
+- [Current Study](#current-study)
+- [Data Output](#data-output)
 - [Installation](#installation)
-  - [Prerequisites](#prerequisites)
-  - [XR Application Setup](#xr-application-setup)
-  - [Hardware Setup](#hardware-setup)
-  - [Dashboard Setup](#dashboard-setup)
 - [Repository Structure](#repository-structure)
-- [Whitepaper](#whitepaper)
-- [Contributing](#contributing)
+- [History](#history)
 - [References](#references)
 - [Team](#team)
 - [License](#license)
@@ -48,45 +34,46 @@
 
 ## Overview
 
-Sollertia is a research system for measuring **fine motor control** in extended reality (XR) environments using task-based interaction and wearable force sensing.
+Sollertia is a system for measuring **fine motor control** in XR using task-based interaction and wearable force input.
 
-The system replicates a standardized button-pressing task in both physical and XR conditions, enabling direct comparison of motor performance across environments. By combining behavioral metrics (reaction time, accuracy, movement trajectory) with continuous force data from finger-mounted sensors, Sollertia provides a comprehensive characterization of upper-limb motor function.
+It replicates the same button-based task in a physical setup and in XR, and compares performance across both environments.
 
-### Research Questions
-
-1. Can XR-based motor tasks capture clinically meaningful fine motor behavior?
-2. How does motor performance in XR compare to equivalent physical tasks?
-3. What role does force modulation play in characterizing motor control quality?
+Users respond to light-up targets by pressing them as quickly and accurately as possible. We log behavioral and force data to capture how people move, react, and apply pressure during interaction.
 
 ---
 
-## Research Context
+## Metrics
 
-Fine motor control assessment is critical for rehabilitation following neurological events such as stroke, where disrupted neural pathways commonly affect hand dexterity and coordination. Traditional assessment methods (e.g., Nine Hole Peg Test, Box and Block Test) provide limited quantitative insight and lack the temporal resolution needed to characterize movement dynamics.
+### Behavioral (XR + Physical)
 
-Virtual reality-based rehabilitation has shown promise for improving motor recovery through engaging, repetitive practice that supports neuroplasticity. However, validating that XR interactions accurately reflect real-world motor capabilities remains an open research challenge.
+| Metric | Description |
+|--------|-------------|
+| **Reaction Time** | Time from target onset to response |
+| **Completion Time** | Total time to complete press |
+| **Spatial Error** | Distance from target center |
+| **Variability** | Consistency across trials |
+| **Movement Trajectory** | Path of hand/finger during reach |
 
-Sollertia addresses this gap by:
+### Wearable (FSR on Index Finger)
 
-- **Standardizing task conditions** across physical and virtual environments
-- **Capturing high-resolution temporal data** on movement and force
-- **Enabling objective, quantitative comparison** of motor performance
-
-### Theoretical Foundation
-
-The system design draws on established motor control principles:
-
-| Principle | Application in Sollertia |
-|-----------|-------------------------|
-| **Fitts' Law** | Target size and distance parameters follow established speed-accuracy tradeoffs |
-| **Motor Learning Theory** | Repeated trials enable assessment of skill acquisition and variability reduction |
-| **Force Control Models** | FSR data captures grip force modulation and stability |
+| Metric | Description |
+|--------|-------------|
+| **Force Magnitude** | Peak pressure during press |
+| **Force Over Time** | Temporal force profile |
+| **Pressure Variability** | Stability of force application |
 
 ---
 
-## System Architecture
+## System
 
-Sollertia consists of three integrated components:
+| Component | Description |
+|-----------|-------------|
+| **Physical Board** | LED targets with matched layout |
+| **XR Version** | Meta Quest 3 with hand tracking, matched timing |
+| **FSR Sensor** | Finger-mounted force sensing |
+| **Logging Pipeline** | Synchronized timing and force data |
+
+### Architecture
 
 ```
                     +------------------+
@@ -97,150 +84,47 @@ Sollertia consists of three integrated components:
                              | WebSocket
                              |
 +------------------+         |         +------------------+
-|    Wearable      +---------+---------+    Clinical      |
-|    Hardware      |   USB Serial      |    Dashboard     |
-|    (FSR Glove)   |                   |    (Rust)        |
+|    Wearable      +---------+---------+    Dashboard     |
+|    Hardware      |   USB Serial      |    (Rust)        |
+|    (FSR)         |                   |                  |
 +------------------+                   +------------------+
 ```
 
-### XR Application
+---
 
-The Unity-based XR application presents a button-pressing task where visual targets appear on a virtual surface. Built for Meta Quest 3 with hand tracking (no controllers required).
+## Sensing
 
-**Key Features:**
+### Current
 
-- AR passthrough mode for mixed reality interaction
-- Configurable session parameters (duration, target count, difficulty)
-- Real-time event logging with millisecond precision
-- Hand tracking for natural finger interaction
+- **FSR sensor** on index finger to measure press force and pressure over time
 
-**Technical Stack:**
+### In Progress
 
-- Unity 6 (6000.3.7f1) with Universal Render Pipeline
-- OpenXR + XR Interaction Toolkit
-- WebSocket client for real-time data streaming
-
-### Wearable Hardware
-
-A finger-mounted sensor system using force-sensing resistors (FSRs) to capture pressure data during interaction.
-
-**Specifications:**
-
-| Component | Details |
-|-----------|---------|
-| Microcontroller | ELEGOO UNO R3 (Arduino-compatible) |
-| Sensors | 2x FSR402 on index and middle fingers |
-| Sampling Rate | 10 Hz |
-| Communication | USB Serial (9600 baud) |
-| Data Format | 16-bit pressure values per channel |
-
-**Why Index and Middle Fingers?**
-
-These digits are primary effectors for precision grip and fine manipulation tasks. They provide:
-
-- High functional relevance for daily activities
-- Reliable force measurement points
-- Established clinical significance in motor assessment
-
-### Clinical Dashboard
-
-A Rust-based application that aggregates data from both the XR application and wearable hardware, providing real-time visualization and session management for clinicians.
-
-**Capabilities:**
-
-- Real-time force and event visualization
-- Session configuration and control
-- Data export for offline analysis
-- Longitudinal progress tracking
+- **EMG integration** using OpenBCI and BrainFlow to capture muscle activation during interaction
 
 ---
 
-## Metrics
+## Current Study
 
-### Behavioral Metrics
+We compare performance between a physical task and its XR equivalent to evaluate whether XR interaction can capture meaningful fine motor behavior.
 
-Captured from the XR application during task performance:
-
-| Metric | Description | Unit |
-|--------|-------------|------|
-| **Reaction Time** | Interval from target onset to movement initiation | ms |
-| **Movement Time** | Duration from movement start to target contact | ms |
-| **Completion Time** | Total time from target onset to successful press | ms |
-| **Spatial Error** | Euclidean distance from fingertip to target center at contact | mm |
-| **Movement Trajectory** | 3D path of hand/finger during reach | Vector3[] |
-| **Trial Variability** | Standard deviation of metrics across trials | varies |
-
-### Force Metrics
-
-Captured from the wearable FSR sensors:
-
-| Metric | Description | Unit |
-|--------|-------------|------|
-| **Peak Force** | Maximum pressure during press | N (calibrated) |
-| **Force Onset Time** | Time from contact to force threshold | ms |
-| **Force Duration** | Time force exceeds threshold | ms |
-| **Force Variability** | Coefficient of variation across trials | % |
-| **Force Profile** | Temporal force curve during press | N vs. time |
-
-### Derived Metrics
-
-| Metric | Computation | Significance |
-|--------|-------------|--------------|
-| **Throughput** | ID / MT (Fitts' Law) | Overall motor efficiency |
-| **Accuracy Index** | 1 - (error / target_radius) | Precision of targeting |
-| **Force Stability** | 1 / CV(force) | Consistency of force application |
+**Direction:** This project focuses on measuring motor behavior in controlled tasks.
 
 ---
 
-## Methods
+## Data Output
 
-### Task Design
+Each trial logs:
 
-The button-pressing task follows a discrete pointing paradigm:
-
-1. **Fixation**: Brief pause before target onset
-2. **Target Onset**: Visual target illuminates at randomized location
-3. **Reach**: Participant moves hand toward target
-4. **Contact**: Fingertip makes contact with target surface
-5. **Press**: Force applied until threshold reached
-6. **Feedback**: Visual/auditory confirmation of successful press
-
-**Task Parameters:**
-
-| Parameter | Default | Range |
-|-----------|---------|-------|
-| Session Duration | 45 s | 30-120 s |
-| Target Count | 9 | 4-16 |
-| Target Diameter | 40 mm | 20-60 mm |
-| Inter-target Distance | 80-150 mm | configurable |
-| Force Threshold | 1.5 N | 0.5-3.0 N |
-
-### Data Collection
-
-Each trial generates a synchronized data record:
-
-```
-Trial Record
-├── trial_id: uint32
-├── target_id: uint8
-├── stimulus_time: timestamp_ms
-├── movement_onset_time: timestamp_ms
-├── contact_time: timestamp_ms
-├── press_time: timestamp_ms
-├── release_time: timestamp_ms
-├── contact_position: Vector3
-├── target_position: Vector3
-├── trajectory: Vector3[]
-└── force_signal: uint16[] (10 Hz)
-```
-
-### Analysis Pipeline
-
-1. **Preprocessing**: Timestamp alignment, outlier removal, signal filtering
-2. **Feature Extraction**: Compute behavioral and force metrics per trial
-3. **Aggregation**: Session-level statistics (mean, SD, trends)
-4. **Comparison**: Physical vs. XR condition analysis
-5. **Visualization**: Performance dashboards and trajectory plots
+| Field | Description |
+|-------|-------------|
+| `target_id` | Which target was pressed |
+| `stimulus_time` | When target lit up |
+| `press_time` | When press was registered |
+| `reaction_time` | Time to respond |
+| `accuracy` | Spatial error from center |
+| `trajectory` | Movement path (XR only) |
+| `force_signal` | FSR readings over time |
 
 ---
 
@@ -253,7 +137,7 @@ Trial Record
 - Arduino IDE (2.0+)
 - Meta Quest 3 with developer mode enabled
 
-### XR Application Setup
+### XR Application
 
 1. Clone the repository:
 
@@ -264,39 +148,24 @@ Trial Record
 
 2. Open `game/` in Unity Hub
 
-3. Install required packages via Package Manager:
+3. Install required packages:
    - XR Interaction Toolkit
    - OpenXR Plugin
    - XR Hands
 
-4. Configure XR settings:
-   - Enable OpenXR in XR Plug-in Management
-   - Add Meta Quest feature group
-
-5. Open `Assets/SollertiaDemo.unity` and press Play
+4. Open `Assets/SollertiaDemo.unity` and press Play
 
 For Quest 3 deployment, see [`QUEST_DEPLOYMENT.md`](game/Assets/Scripts/Sollertia/QUEST_DEPLOYMENT.md).
 
-### Hardware Setup
+### Hardware
 
-1. Connect FSR sensors to Arduino:
+```
+FSR (Index) → A0
+```
 
-   ```
-   FSR 1 (Index)  → A0
-   FSR 2 (Middle) → A1
-   ```
+Upload `hardware/hardware.ino` via Arduino IDE.
 
-2. Upload firmware:
-
-   ```bash
-   # Open hardware/hardware.ino in Arduino IDE
-   # Select board: Arduino Uno
-   # Upload
-   ```
-
-3. Verify serial output at 9600 baud
-
-### Dashboard Setup
+### Dashboard
 
 ```bash
 cd dashboard
@@ -311,108 +180,88 @@ cargo run --release
 ```
 Sollertia/
 |
-|-- game/                          # Unity XR application
+|-- game/                    # Unity XR application
 |   |-- Assets/
 |   |   |-- Scripts/Sollertia/
-|   |   |   |-- SollertiaDemo.cs   # Main application logic
-|   |   |   |-- SETUP_INSTRUCTIONS.md
-|   |   |   |-- QUEST_DEPLOYMENT.md
-|   |   |-- Settings/              # XR plugin configuration
-|   |   |-- SollertiaDemo.unity    # Main scene
-|   |-- Packages/
-|   |-- ProjectSettings/
+|   |   |-- SollertiaDemo.unity
 |
-|-- dashboard/                     # Rust clinical dashboard
+|-- dashboard/               # Rust dashboard
 |   |-- Cargo.toml
 |   |-- crates/
 |
-|-- hardware/                      # Arduino sensor firmware
+|-- hardware/                # Arduino firmware
 |   |-- hardware.ino
 |
-|-- paper/                         # Research whitepaper (LaTeX)
-|   |-- main.tex
-|   |-- references.bib
-|   |-- figures/
+|-- paper/                   # Research whitepaper (LaTeX)
 |
-|-- docs/                          # GitHub Pages site
-|   |-- index.html
+|-- docs/                    # GitHub Pages site
 |
 |-- README.md
 |-- LICENSE
-|-- AGENTS.md
 ```
 
 ---
 
-## Whitepaper
+## History
 
-The research whitepaper is available at: **[sollertia.github.io](https://anaya33.github.io/Sollertia/)**
+### Origin: UGAHacks XI
 
-The paper details:
+Sollertia began as a hackathon project at **UGAHacks XI** under the name "Tactilis." The original vision was a mixed-reality rehabilitation tool for stroke recovery, combining XR interaction with wearable pressure sensing.
 
-- Theoretical background on motor control assessment
-- System design and implementation
-- Validation methodology
-- Preliminary findings
-- Future research directions
+**Original Hackathon Team:**
+- Anaya Yorke
+- David Salas C.
+- Garret S. Stand
+- Mathias Sosa
 
----
+### Evolution to Research
 
-## Contributing
+After the hackathon, the project evolved from a rehabilitation-focused prototype into a research system for studying fine motor control. The scope shifted from clinical rehabilitation to fundamental research on comparing motor behavior across physical and XR environments.
 
-Contributions are welcome. Areas of interest:
+**What Changed:**
+- Removed rehabilitation-specific framing
+- Focused on controlled motor measurement
+- Added physical task condition for comparison
+- Expanded sensing capabilities (EMG in progress)
 
-| Area | Description |
-|------|-------------|
-| **Signal Processing** | Improved force signal filtering and feature extraction |
-| **Machine Learning** | Motor pattern classification and anomaly detection |
-| **Clinical Validation** | Study design and IRB protocol development |
-| **Hardware** | Additional sensor modalities (IMU, EMG) |
-| **Visualization** | Enhanced dashboard and analysis tools |
-
-### Contribution Guidelines
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/your-feature`)
-3. Commit changes with clear messages
-4. Submit a pull request with description of changes
+The name changed from "Tactilis" to "Sollertia" (Latin for "skill with hand") to reflect the research focus on motor skill measurement.
 
 ---
 
 ## References
 
-### Primary Sources
+1. Schoen et al., 2025. *From Pegs to Pixels: A Comparative Analysis of the Nine Hole Peg Test and a Digital Copy Drawing Test for Fine Motor Control Assessment.*
+   [PDF](https://thomaskosch.com/wp-content/papercite-data/pdf/schoen2025from.pdf)
 
-1. Lu, X., et al. (2019). *Modeling Endpoint Distribution of Pointing Selection Tasks in Virtual Reality Environments.* [PDF](https://xueshilu.github.io/papers/Modeling%20Endpoint%20Distribution%20of%20Pointing%20Selection%20Tasks%20in%20Virtual%20Reality%20Environments.pdf)
+2. Lu et al., 2019. *Modeling Endpoint Distribution of Pointing Selection Tasks in Virtual Reality Environments.*
+   [PDF](https://xueshilu.github.io/papers/Modeling%20Endpoint%20Distribution%20of%20Pointing%20Selection%20Tasks%20in%20Virtual%20Reality%20Environments.pdf)
 
-2. Chen, D., et al. (2024). *Metrics of Motor Learning for Analyzing Movement Mapping in Virtual Reality.* [PDF](https://www.difeng.me/papers/24_Metrics.pdf)
+3. Chen et al., 2024. *Metrics of Motor Learning for Analyzing Movement Mapping in Virtual Reality.*
+   [PDF](https://www.difeng.me/papers/24_Metrics.pdf)
 
-3. Schoen, A., et al. (2025). *From Pegs to Pixels: A Comparative Analysis of the Nine Hole Peg Test and a Digital Copy Drawing Test for Fine Motor Control Assessment.* [PDF](https://thomaskosch.com/wp-content/papercite-data/pdf/schoen2025from.pdf)
+4. Wei et al., 2019. *Accurate and Low-Latency Sensing of Touch Contact on Any Surface with Finger-Worn IMU Sensor.*
+   [PDF](https://xiaoying-wei.github.io/TappingRing.pdf)
 
-4. Wei, X., et al. (2019). *Accurate and Low-Latency Sensing of Touch Contact on Any Surface with Finger-Worn IMU Sensor.* [PDF](https://xiaoying-wei.github.io/TappingRing.pdf)
-
-5. Schneider, O., et al. (2021). *Accuracy Evaluation of Touch Tasks in Commodity Virtual and Augmented Reality Head-Mounted Displays.* [PDF](https://pokristensson.com/pubs/SchneiderEtAlSUI2021.pdf)
-
-### Supporting Literature
-
-6. Yorke, A., et al. (2024). *A Machine Learning Approach for Predicting Upper Limb Motion Intentions with Multimodal Data in Virtual Reality.* arXiv:2405.13023. [Link](https://arxiv.org/abs/2405.13023)
-
-7. Fitts, P. M. (1954). *The information capacity of the human motor system in controlling the amplitude of movement.* Journal of Experimental Psychology, 47(6), 381-391.
-
-8. Laver, K. E., et al. (2017). *Virtual reality for stroke rehabilitation.* Cochrane Database of Systematic Reviews.
+5. Schneider et al., 2021. *Accuracy Evaluation of Touch Tasks in Commodity Virtual and Augmented Reality Head-Mounted Displays.*
+   [PDF](https://pokristensson.com/pubs/SchneiderEtAlSUI2021.pdf)
 
 ---
 
 ## Team
 
-| Name | Role | Contact |
-|------|------|---------|
-| **Anaya Yorke** | Lead Researcher | [@anaya33](https://github.com/anaya33) |
-| **David Salas C.** | Hardware Development | |
-| **Garret S. Stand** | Software Engineering | [@gstand](https://github.com/gstand) |
-| **Mathias Sosa** | XR Development | |
+### Current Research Team
 
-*Originally developed at UGAHacks XI, now continued as an independent research project.*
+| Name | Role | GitHub |
+|------|------|--------|
+| **Anaya Yorke** | Lead Researcher | [@anaya33](https://github.com/anaya33) |
+| **Garret S. Stand** | Software Engineering | [@gstand](https://github.com/gstand) |
+
+### Original Hackathon Team (UGAHacks XI)
+
+- Anaya Yorke
+- David Salas C.
+- Garret S. Stand
+- Mathias Sosa
 
 ---
 
