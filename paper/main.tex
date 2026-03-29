@@ -1,0 +1,372 @@
+\documentclass[11pt,twocolumn]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{natbib}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+% Hyperref setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!60!black,
+    citecolor=blue!60!black,
+    urlcolor=blue!60!black
+}
+
+% Header/Footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Sollertia: Fine Motor Control in XR}
+\fancyhead[R]{\small \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% Title formatting
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+% Code listing style
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!50!black},
+    stringstyle=\color{red!60!black}
+}
+
+\title{
+    \vspace{-1cm}
+    \textbf{Sollertia: Quantifying Fine Motor Control in Extended Reality Through Task-Based Interaction and Wearable Force Sensing}
+}
+
+\author{
+    Anaya Yorke\textsuperscript{1} \quad
+    David Salas C.\textsuperscript{1} \quad
+    Garret S. Stand\textsuperscript{1} \quad
+    Mathias Sosa\textsuperscript{1} \\[0.5em]
+    \textsuperscript{1}Independent Research \\[0.3em]
+    \small\texttt{github.com/anaya33/Sollertia}
+}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Fine motor control assessment is critical for rehabilitation following neurological events, yet traditional methods lack the temporal resolution and quantitative precision needed to characterize movement dynamics. We present Sollertia, a research system that measures fine motor control in extended reality (XR) environments using task-based interaction and wearable force sensing. The system replicates a standardized button-pressing task in both physical and XR conditions, combining behavioral metrics (reaction time, spatial accuracy, movement trajectory) with continuous force data from finger-mounted sensors. This paper describes the system architecture, measurement methodology, and preliminary validation approach. By enabling direct comparison of motor performance across physical and virtual environments, Sollertia addresses a key gap in XR-based rehabilitation research: validating that virtual interactions accurately reflect real-world motor capabilities.
+\end{abstract}
+
+\section{Introduction}
+
+Stroke and other neurological conditions frequently impair fine motor control, affecting patients' ability to perform daily activities requiring hand dexterity and coordination \citep{laver2017virtual}. Rehabilitation depends on repetitive, engaging practice to support neuroplasticity, yet traditional assessment methods—such as the Nine Hole Peg Test and Box and Block Test—provide limited quantitative insight into movement quality \citep{schoen2025pegs}.
+
+Virtual reality (VR) and extended reality (XR) technologies offer promising platforms for rehabilitation, providing immersive, motivating environments that can be precisely controlled and measured \citep{chen2024metrics}. However, a fundamental question remains: \textit{Do motor behaviors observed in XR accurately reflect real-world motor capabilities?}
+
+This paper introduces Sollertia, a system designed to address this question through:
+
+\begin{enumerate}
+    \item \textbf{Standardized task replication} across physical and XR environments
+    \item \textbf{Multi-modal measurement} combining behavioral and force metrics
+    \item \textbf{High temporal resolution} data capture for movement dynamics analysis
+\end{enumerate}
+
+\section{Background}
+
+\subsection{Motor Control Assessment}
+
+Traditional clinical assessments of fine motor control rely on timed tasks that yield single summary scores (e.g., time to complete). While clinically validated, these measures obscure the temporal dynamics of movement—including reaction time, movement trajectory, and force modulation—that may provide earlier or more sensitive indicators of motor function \citep{wei2019tapping}.
+
+\subsection{Fitts' Law and Pointing Tasks}
+
+Fitts' Law \citep{fitts1954information} provides a foundational model for understanding speed-accuracy tradeoffs in aimed movements:
+
+\begin{equation}
+    MT = a + b \cdot ID
+\end{equation}
+
+where $MT$ is movement time, $ID = \log_2(2D/W)$ is the index of difficulty, $D$ is movement distance, and $W$ is target width. This relationship has been validated extensively in 2D interfaces and, more recently, in 3D virtual environments \citep{lu2019modeling}.
+
+\subsection{XR for Rehabilitation}
+
+Virtual reality-based rehabilitation has demonstrated efficacy for upper limb motor recovery \citep{laver2017virtual}. Key advantages include:
+
+\begin{itemize}
+    \item Precise control over task parameters
+    \item Automatic, objective data collection
+    \item Engaging, gamified experiences
+    \item Safe practice environments
+\end{itemize}
+
+However, validation that XR-based assessments correlate with real-world motor function remains limited \citep{schneider2021accuracy}.
+
+\section{System Design}
+
+Sollertia comprises three integrated components: an XR application, wearable hardware, and a clinical dashboard.
+
+\subsection{XR Application}
+
+The Unity-based application presents a discrete pointing task on Meta Quest 3 with hand tracking. Visual targets appear on a virtual surface, and participants press them using natural finger movements.
+
+\textbf{Technical specifications:}
+\begin{itemize}
+    \item Unity 6 with Universal Render Pipeline
+    \item OpenXR + XR Interaction Toolkit
+    \item Hand tracking (no controllers)
+    \item WebSocket data streaming
+    \item Millisecond-precision event logging
+\end{itemize}
+
+\subsection{Wearable Hardware}
+
+Force-sensing resistors (FSRs) mounted on the index and middle fingers capture pressure data during interaction.
+
+\begin{table}[H]
+\centering
+\caption{Hardware Specifications}
+\begin{tabular}{ll}
+\toprule
+\textbf{Component} & \textbf{Details} \\
+\midrule
+Microcontroller & ELEGOO UNO R3 \\
+Sensors & 2$\times$ FSR402 \\
+Sampling Rate & 10 Hz \\
+Communication & USB Serial (9600 baud) \\
+Resolution & 10-bit ADC (0--1023) \\
+\bottomrule
+\end{tabular}
+\label{tab:hardware}
+\end{table}
+
+The index and middle fingers were selected as primary measurement points due to their functional importance in precision grip and established clinical significance in motor assessment.
+
+\subsection{Clinical Dashboard}
+
+A Rust-based application aggregates data streams, providing:
+
+\begin{itemize}
+    \item Real-time visualization of force and events
+    \item Session configuration and control
+    \item Data export for offline analysis
+    \item Longitudinal progress tracking
+\end{itemize}
+
+\section{Measurement Framework}
+
+\subsection{Behavioral Metrics}
+
+The following metrics are computed from XR application data:
+
+\begin{table}[H]
+\centering
+\caption{Behavioral Metrics}
+\begin{tabular}{lp{4cm}}
+\toprule
+\textbf{Metric} & \textbf{Description} \\
+\midrule
+Reaction Time & Target onset to movement initiation \\
+Movement Time & Movement start to target contact \\
+Spatial Error & Distance from contact to target center \\
+Trajectory & 3D path during reach \\
+Variability & SD across trials \\
+\bottomrule
+\end{tabular}
+\label{tab:behavioral}
+\end{table}
+
+\subsection{Force Metrics}
+
+FSR data enables characterization of force application:
+
+\begin{table}[H]
+\centering
+\caption{Force Metrics}
+\begin{tabular}{lp{4cm}}
+\toprule
+\textbf{Metric} & \textbf{Description} \\
+\midrule
+Peak Force & Maximum pressure during press \\
+Force Onset & Time to reach force threshold \\
+Force Duration & Time above threshold \\
+Force CV & Coefficient of variation \\
+\bottomrule
+\end{tabular}
+\label{tab:force}
+\end{table}
+
+\subsection{Derived Metrics}
+
+Composite metrics provide summary characterizations:
+
+\begin{equation}
+    \text{Throughput} = \frac{ID}{MT}
+\end{equation}
+
+\begin{equation}
+    \text{Accuracy Index} = 1 - \frac{\text{error}}{\text{target radius}}
+\end{equation}
+
+\begin{equation}
+    \text{Force Stability} = \frac{1}{CV_{\text{force}}}
+\end{equation}
+
+\section{Task Protocol}
+
+\subsection{Discrete Pointing Task}
+
+Each trial follows a structured sequence:
+
+\begin{enumerate}
+    \item \textbf{Fixation} (500 ms): Brief pause
+    \item \textbf{Target Onset}: Visual target illuminates
+    \item \textbf{Reach}: Participant moves toward target
+    \item \textbf{Contact}: Fingertip contacts surface
+    \item \textbf{Press}: Force applied until threshold
+    \item \textbf{Feedback}: Confirmation of success
+\end{enumerate}
+
+\subsection{Task Parameters}
+
+\begin{table}[H]
+\centering
+\caption{Configurable Task Parameters}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Parameter} & \textbf{Default} & \textbf{Range} \\
+\midrule
+Session Duration & 45 s & 30--120 s \\
+Target Count & 9 & 4--16 \\
+Target Diameter & 40 mm & 20--60 mm \\
+Force Threshold & 1.5 N & 0.5--3.0 N \\
+\bottomrule
+\end{tabular}
+\label{tab:params}
+\end{table}
+
+\section{Data Collection}
+
+Each trial generates a synchronized record containing:
+
+\begin{itemize}
+    \item Trial and target identifiers
+    \item Timestamps: stimulus, movement onset, contact, press, release
+    \item Spatial data: contact position, target position, trajectory
+    \item Force signal: continuous FSR readings
+\end{itemize}
+
+Data synchronization is achieved through timestamp alignment between the XR application and hardware streams.
+
+\section{Analysis Pipeline}
+
+\subsection{Preprocessing}
+
+\begin{enumerate}
+    \item Timestamp alignment across data streams
+    \item Outlier detection and removal
+    \item Signal filtering (low-pass for force data)
+\end{enumerate}
+
+\subsection{Feature Extraction}
+
+Per-trial computation of behavioral and force metrics as defined in Section 4.
+
+\subsection{Aggregation}
+
+Session-level statistics:
+\begin{itemize}
+    \item Central tendency (mean, median)
+    \item Dispersion (SD, IQR)
+    \item Trends across trials (learning effects)
+\end{itemize}
+
+\subsection{Condition Comparison}
+
+Statistical comparison of physical vs. XR performance using paired analyses.
+
+\section{Validation Approach}
+
+\subsection{Research Questions}
+
+\begin{enumerate}
+    \item Can XR-based motor tasks capture clinically meaningful fine motor behavior?
+    \item How does motor performance in XR compare to equivalent physical tasks?
+    \item What role does force modulation play in characterizing motor control quality?
+\end{enumerate}
+
+\subsection{Planned Studies}
+
+\textbf{Study 1: Test-Retest Reliability}
+
+Assess consistency of metrics across repeated sessions within participants.
+
+\textbf{Study 2: Physical-XR Comparison}
+
+Compare performance on matched tasks in physical and XR conditions.
+
+\textbf{Study 3: Clinical Correlation}
+
+Correlate Sollertia metrics with established clinical assessments (e.g., Nine Hole Peg Test).
+
+\section{Discussion}
+
+\subsection{Contributions}
+
+Sollertia provides a framework for rigorous comparison of motor performance across physical and XR environments. Key contributions include:
+
+\begin{itemize}
+    \item Integration of behavioral and force metrics
+    \item Standardized task protocol for cross-environment comparison
+    \item Open-source implementation for research reproducibility
+\end{itemize}
+
+\subsection{Limitations}
+
+Current limitations include:
+\begin{itemize}
+    \item Limited sensor coverage (two fingers)
+    \item Moderate force sampling rate (10 Hz)
+    \item Preliminary validation status
+\end{itemize}
+
+\subsection{Future Directions}
+
+\begin{itemize}
+    \item Additional sensor modalities (IMU, EMG)
+    \item Machine learning for motor pattern classification
+    \item Clinical validation studies
+    \item Adaptive difficulty algorithms
+\end{itemize}
+
+\section{Conclusion}
+
+Sollertia represents a step toward rigorous, quantitative assessment of fine motor control in XR environments. By combining behavioral and force metrics in a standardized task framework, the system enables direct comparison of motor performance across physical and virtual conditions—a critical capability for validating XR-based rehabilitation tools.
+
+The open-source implementation is available at \url{https://github.com/anaya33/Sollertia}.
+
+\section*{Acknowledgments}
+
+This project originated at UGAHacks XI and continues as an independent research effort. We thank the hackathon organizers and mentors for their support.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
