@@ -206,25 +206,17 @@ Sollertia/
 
 ### Origin: UGAHacks XI
 
-Sollertia began as a hackathon project at **UGAHacks XI** under the name "Tactilis." The original vision was a mixed-reality rehabilitation tool for stroke recovery, combining XR interaction with wearable pressure sensing.
+Sollertia began as a hackathon project at **UGAHacks XI** The original vision was a mixed-reality rehabilitation tool for stroke recovery, combining XR interaction with wearable pressure sensing.
 
 **Original Hackathon Team:**
 - Anaya Yorke
 - David Salas C.
-- Garret S. Stand
+- Garret Stand
 - Mathias Sosa
 
 ### Evolution to Research
 
 After the hackathon, the project evolved from a rehabilitation-focused prototype into a research system for studying fine motor control. The scope shifted from clinical rehabilitation to fundamental research on comparing motor behavior across physical and XR environments.
-
-**What Changed:**
-- Removed rehabilitation-specific framing
-- Focused on controlled motor measurement
-- Added physical task condition for comparison
-- Expanded sensing capabilities (EMG in progress)
-
-The name changed from "Tactilis" to "Sollertia" (Latin for "skill with hand") to reflect the research focus on motor skill measurement.
 
 ---
 
@@ -253,14 +245,14 @@ The name changed from "Tactilis" to "Sollertia" (Latin for "skill with hand") to
 
 | Name | Role | GitHub |
 |------|------|--------|
-| **Anaya Yorke** | Lead Researcher | [@anaya33](https://github.com/anaya33) |
-| **Garret S. Stand** | Software Engineering | [@gstand](https://github.com/gstand) |
+| **Anaya Yorke** | Researcher | [@anaya33](https://github.com/anaya33) |
+| **Garret Stand** | Researcher | [@gstand](https://github.com/gstand) |
 
 ### Original Hackathon Team (UGAHacks XI)
 
 - Anaya Yorke
 - David Salas C.
-- Garret S. Stand
+- Garret Stand
 - Mathias Sosa
 
 ---
